@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import AppRouter from "components/Router";
-import { authService } from "myFirebase";
+import AppRouter from 'components/Router';
+import { useEffect, useState } from 'react';
+import { authService } from 'myFirebase';
 
 function App() {
   const [init, setInit] = useState(false);
   const [userObj, setUserObj] = useState(null);
+
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
         setUserObj({
-          displayName: user.displayName,
-          uid: user.uid,
+          displayName: authService.currentUser.displayName
+            ? authService.currentUser.displayName
+            : 'Anonymous',
+          uid: authService.currentUser.uid,
           updateProfile: (args) => user.updateProfile(args),
         });
       } else {
@@ -19,14 +22,18 @@ function App() {
       setInit(true);
     });
   }, []);
+
   const refreshUser = () => {
     const user = authService.currentUser;
     setUserObj({
-      displayName: user.displayName,
-      uid: user.uid,
+      displayName: authService.currentUser.displayName
+        ? authService.currentUser.displayName
+        : 'Anonymous',
+      uid: authService.currentUser.uid,
       updateProfile: (args) => user.updateProfile(args),
     });
   };
+
   return (
     <>
       {init ? (
@@ -36,8 +43,12 @@ function App() {
           userObj={userObj}
         />
       ) : (
-        "Initializing..."
+        'Initializing'
       )}
+      <footer style={{ textAlign: 'center' }}>
+        {' '}
+        &copy; Dwitter {new Date().getFullYear()}
+      </footer>
     </>
   );
 }

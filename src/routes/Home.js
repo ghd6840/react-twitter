@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { dbService } from "myFirebase";
+import {
+    collection,
+    onSnapshot,
+    query,
+    orderBy,
+  } from 'firebase/firestore';
 import Tweet from "components/Tweet";
 import TweetFactory from "components/TweetFactory";
 
 const Home = ({ userObj }) => {
   const [tweets, setTweets] = useState([]);
+
   useEffect(() => {
-    dbService
-      .collection("tweets")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((snapshot) => {
-        const tweetArray = snapshot.docs.map((doc) => ({  //not re-render
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTweets(tweetArray);
-      });
+    const q = query(
+      collection(dbService, 'tweets'),
+      orderBy('createdAt', 'desc')
+    );
+    onSnapshot(q, (snapshot) => {
+      const tweetArray = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTweets(tweetArray);
+    });
   }, []);
   return (
     <div className="container">

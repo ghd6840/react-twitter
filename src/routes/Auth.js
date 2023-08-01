@@ -1,27 +1,44 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
+import {
+    getAuth,
+    signInWithPopup,
+    GoogleAuthProvider,
+    GithubAuthProvider,
+  } from 'firebase/auth';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTwitter,
   faGoogle,
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
-import { authService, firebaseInstance } from "myFirebase";
 import AuthForm from "components/AuthForm";
 
 const Auth = () => {
-  const onSocialClick = async (event) => {
-    const {
-      target: { name },
-    } = event;
-    let provider;
-    if (name === "google") {
-      provider = new firebaseInstance.auth.GoogleAuthProvider();
-    } else if (name === "github") {
-      provider = new firebaseInstance.auth.GithubAuthProvider();
-    }
-    await authService.signInWithPopup(provider);
-  };
-  return (
+    const auth = getAuth();
+
+    const onSocialClick = async (event) => {
+        const {
+          target: { name },
+        } = event;
+    
+        let provider;
+        try {
+          if (name === 'google') {
+            provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+          } else if (name === 'github') {
+            provider = new GithubAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const credential = GithubAuthProvider.credentialFromResult(result);
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+    };
+    
+    return (
     <div className="authContainer">
       <FontAwesomeIcon
         icon={faTwitter}
@@ -39,6 +56,6 @@ const Auth = () => {
         </button>
       </div>
     </div>
-  );
+    );
 };
 export default Auth;

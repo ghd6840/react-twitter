@@ -1,29 +1,33 @@
 import React, { useState } from "react";
 import { authService } from "myFirebase";
 import { useHistory } from "react-router-dom";
+import { getAuth, updateProfile } from '@firebase/auth';
 
 const Profile = ({ refreshUser, userObj }) => {
   const history = useHistory();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
+
   const onLogOutClick = () => {
     authService.signOut();
     history.push("/");
   };
+
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
     setNewDisplayName(value);
   };
+
   const onSubmit = async (event) => {
+    const auth = getAuth();
     event.preventDefault();
     if (userObj.displayName !== newDisplayName) {
-      await userObj.updateProfile({
-        displayName: newDisplayName,
-      });
-      refreshUser();
+      await updateProfile(auth.currentUser, { displayName: newDisplayName });
     }
+    refreshUser();
   };
+
   return (
     <div className="container">
       <form onSubmit={onSubmit} className="profileForm">

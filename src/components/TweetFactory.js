@@ -7,11 +7,13 @@ import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 const TweetFactory = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [attachment, setAttachment] = useState("");
+
   const onSubmit = async (event) => {
     event.preventDefault();
     if (tweet === "") {
       return;
     }
+
     let attachmentUrl = "";
     if (attachment !== "") {
       const attachmentRef = storageService
@@ -20,6 +22,7 @@ const TweetFactory = ({ userObj }) => {
       const response = await attachmentRef.putString(attachment, "data_url");
       attachmentUrl = await response.ref.getDownloadURL();
     }
+
     const tweetObj = {
       text: tweet,
       createdAt: Date.now(),
@@ -30,12 +33,14 @@ const TweetFactory = ({ userObj }) => {
     setTweet("");
     setAttachment("");
   };
+
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
     setTweet(value);
   };
+
   const onFileChange = (event) => {
     const {
       target: { files },
@@ -52,6 +57,7 @@ const TweetFactory = ({ userObj }) => {
       reader.readAsDataURL(theFile);
     }
   };
+  
   const onClearAttachment = () => setAttachment("");
   return (
     <form onSubmit={onSubmit} className="factoryForm">
