@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { dbService } from "myFirebase";
+import { dbService } from 'myFirebase';
+import React, { useEffect, useState } from 'react';
 import {
-    collection,
-    onSnapshot,
-    query,
-    orderBy,
-  } from 'firebase/firestore';
-import Tweet from "components/Tweet";
-import TweetFactory from "components/TweetFactory";
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import Tweet from 'components/Tweet';
+import TweetFactory from 'components/TweetFactory';
 
 const Home = ({ userObj }) => {
   const [tweets, setTweets] = useState([]);
-
   useEffect(() => {
     const q = query(
       collection(dbService, 'tweets'),
       orderBy('createdAt', 'desc')
     );
     onSnapshot(q, (snapshot) => {
-      const tweetArray = snapshot.docs.map((doc) => ({
+      const tweetArr = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      setTweets(tweetArray);
+      setTweets(tweetArr);
     });
   }, []);
+
   return (
     <div className="container">
       <TweetFactory userObj={userObj} />
@@ -40,4 +40,5 @@ const Home = ({ userObj }) => {
     </div>
   );
 };
+
 export default Home;

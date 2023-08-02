@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { storageService, dbService } from "myFirebase";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import { storageService, dbService } from 'myFirebase';
+import { v4 as uuidv4 } from 'uuid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const TweetFactory = ({ userObj }) => {
-  const [tweet, setTweet] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState('');
+  const [tweet, setTweet] = useState('');
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (tweet === "") {
+    if (tweet === '') {
       return;
     }
+    let attachmentUrl = '';
 
-    let attachmentUrl = "";
-    if (attachment !== "") {
+    if (attachment !== '') {
       const attachmentRef = storageService
         .ref()
         .child(`${userObj.uid}/${uuidv4()}`);
-      const response = await attachmentRef.putString(attachment, "data_url");
+      const response = await attachmentRef.putString(attachment, 'data_url');
       attachmentUrl = await response.ref.getDownloadURL();
     }
 
@@ -29,9 +29,9 @@ const TweetFactory = ({ userObj }) => {
       creatorId: userObj.uid,
       attachmentUrl,
     };
-    await dbService.collection("tweets").add(tweetObj);
-    setTweet("");
-    setAttachment("");
+    await dbService.collection('tweets').add(tweetObj);
+    setTweet('');
+    setAttachment('');
   };
 
   const onChange = (event) => {
@@ -45,7 +45,7 @@ const TweetFactory = ({ userObj }) => {
     const {
       target: { files },
     } = event;
-    const theFile = files[0];
+    const theFile = files[0]; //오직 하나의 파일만 받기 때문에 0번째 인덱스에 접근
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       const {
@@ -53,12 +53,13 @@ const TweetFactory = ({ userObj }) => {
       } = finishedEvent;
       setAttachment(result);
     };
-    if (Boolean(theFile)) {
-      reader.readAsDataURL(theFile);
-    }
+    reader.readAsDataURL(theFile);
   };
-  
-  const onClearAttachment = () => setAttachment("");
+
+  const onClickClear = () => {
+    setAttachment('');
+  };
+
   return (
     <form onSubmit={onSubmit} className="factoryForm">
       <div className="factoryInput__container">
@@ -72,7 +73,7 @@ const TweetFactory = ({ userObj }) => {
         />
         <input type="submit" value="&rarr;" className="factoryInput__arrow" />
       </div>
-      <label for="attach-file" className="factoryInput__label">
+      <label htmlFor="attach-file" className="factoryInput__label">
         <span>Add photos</span>
         <FontAwesomeIcon icon={faPlus} />
       </label>
@@ -92,9 +93,8 @@ const TweetFactory = ({ userObj }) => {
             style={{
               backgroundImage: attachment,
             }}
-            alt="img"
-          />
-          <div className="factoryForm__clear" onClick={onClearAttachment}>
+          alt=''/>
+          <div className="factoryForm__clear" onClick={onClickClear}>
             <span>Remove</span>
             <FontAwesomeIcon icon={faTimes} />
           </div>
@@ -103,4 +103,5 @@ const TweetFactory = ({ userObj }) => {
     </form>
   );
 };
+
 export default TweetFactory;

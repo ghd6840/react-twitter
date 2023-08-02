@@ -47,7 +47,7 @@ function App() {
       )}
       <footer style={{ textAlign: 'center' }}>
         {' '}
-        &copy; Dwitter {new Date().getFullYear()}
+        &copy; {new Date().getFullYear()} My React Twitter 
       </footer>
     </>
   );

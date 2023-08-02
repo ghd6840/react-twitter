@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { authService } from "myFirebase";
-import { useHistory } from "react-router-dom";
+import { authService } from 'myFirebase';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { getAuth, updateProfile } from '@firebase/auth';
 
-const Profile = ({ refreshUser, userObj }) => {
+const Profile = ({ userObj, refreshUser }) => {
   const history = useHistory();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
 
-  const onLogOutClick = () => {
+  const onClickLogOut = () => {
     authService.signOut();
-    history.push("/");
+    history.push('/');
   };
 
   const onChange = (event) => {
@@ -32,10 +32,10 @@ const Profile = ({ refreshUser, userObj }) => {
     <div className="container">
       <form onSubmit={onSubmit} className="profileForm">
         <input
-          onChange={onChange}
           type="text"
           autoFocus
           placeholder="Display name"
+          onChange={onChange}
           value={newDisplayName}
           className="formInput"
         />
@@ -48,7 +48,7 @@ const Profile = ({ refreshUser, userObj }) => {
           }}
         />
       </form>
-      <span className="formBtn cancelBtn logOut" onClick={onLogOutClick}>
+      <span className="formBtn cancelBtn logOut" onClick={onClickLogOut}>
         Log Out
       </span>
     </div>
