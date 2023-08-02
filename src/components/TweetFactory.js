@@ -45,7 +45,7 @@ const TweetFactory = ({ userObj }) => {
     const {
       target: { files },
     } = event;
-    const theFile = files[0]; //오직 하나의 파일만 받기 때문에 0번째 인덱스에 접근
+    const theFile = files[0]; //파일 하나만 받으면 되기 때문에 0번째 인덱스에 접근
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       const {

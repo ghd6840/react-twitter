@@ -41,12 +41,12 @@ const Tweet = ({ tweetObj, isOwner }) => {
   };
 
   return (
-    <div className="nweet">
+    <div className="tweet">
       {editing ? (
         <>
           {isOwner && (
             <>
-              <form onSubmit={onSubmit} className="container nweetEdit">
+              <form onSubmit={onSubmit} className="container tweetEdit">
                 <input
                   type="text"
                   placeholder="Edit your tweet"
