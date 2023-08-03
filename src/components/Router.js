@@ -15,6 +15,7 @@ const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
     <Router>
       {isLoggedIn && <Navigation userObj={userObj} />}
       <Switch>
+        <>
         {isLoggedIn ? (
           <div
             style={{
@@ -39,9 +40,10 @@ const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
             <Auth />
           </Route>
         )}
+        </>
       </Switch>
     </Router>
   );
 };
-
+// React does not recognize the `computedMatch` prop on a DOM element. Need <> after Switch.
 export default AppRouter;
